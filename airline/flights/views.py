@@ -1,18 +1,18 @@
 from django.shortcuts import render
 from .models import flight, airport
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 # Create your views here.
 def index(request):
-    ...
+    return render(request, 'flights/index.html')
 
 def airports(request, id):
     d = airport.objects.get(pk=id)
-    ...
+    return HttpResponse(f"Airport {id}")
 
 def flights(request, id):
     d = flight.objects.get(pk=id)
-    ...
+    return HttpResponse(f"Flight {id}")
 
 def search(request):
     if request.GET.get('type') == "flights":

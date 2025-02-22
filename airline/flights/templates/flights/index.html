@@ -1,0 +1,142 @@
+{% extends 'flights/layout.html'%}
+
+{% block script%}
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelector('#home').style.display="block";
+            document.querySelector('#airports').style.display="none";
+            document.querySelector('#flights').style.display="none";           
+            
+            document.querySelector('#flightsbtn').onclick = ()=>{
+                document.querySelector('#home').style.display="none";
+                document.querySelector('#airports').style.display="none";
+                document.querySelector('#flights').style.display="block";
+            };
+            document.querySelector('#airportsbtn').onclick = ()=>{
+                document.querySelector('#home').style.display="none";
+                document.querySelector('#airports').style.display="block";
+                document.querySelector('#flights').style.display="none";
+            };
+
+
+            // Find Flights
+            document.querySelector('#findflights').onclick = ()=>{
+                let o = document.querySelector('#origin');
+                let d = document.querySelector('#destination');
+                    
+                fetch(`search?type=flights&origin=${o.value}&destination=${d.value}`, {
+                    method:"GET"
+                })
+                .then(function(response){return response.json()})
+                .then(function(json){
+                    o.value = "";
+                    d.value = "";
+                    let res = document.querySelector('#flightresults');
+                    res.innerHTML = "";
+                    let f = document.createElement("li");
+                    f.style.height = "100px";
+                    f.style.borderBottom = "1px solid";
+                    res.append(f); 
+                    json['flights'].forEach((flight) => {
+                        let f = document.createElement("li");
+                        f.class = "list-group-item";
+                        let origin = document.createElement('a');
+                        origin.innerHTML=`${flight['origin_country']} ${flight['origin_city']}`;
+                        origin.href = `flight/${flight["origin_id"]}`;
+                        origin.class="link-opacity-25-hover";
+                        let destination = document.createElement('a');
+                        destination.innerHTML=`${flight["destination_country"]} ${flight["destination_city"]}`;
+                        destination.href = `flight/${flight["destination_id"]}`;
+                        destination.class="link-opacity-25-hover";
+                        let book = document.createElement('button');
+                        book.innerHTML = "Book";
+                        book.class = "float-right";
+                        book.onclick = function(){
+                            window.location.replace(`flight/${flight['id']}`);
+                        }
+                        f.append('From');
+                        f.appendChild(origin);
+                        f.append('To');
+                        f.appendChild(destination);
+                        f.append(`duration: ${flight['duration']} minutes`);
+                        f.appendChild(book);
+                        f.style.padding = "10px";
+                        f.style.borderBottom = "1px solid";
+                        res.append(f);
+                    });
+                });
+            };
+
+
+            // Find Airports
+            document.querySelector('#findairports').onclick = ()=>{
+                let country = document.querySelector('#country');
+                let city = document.querySelector('#city');
+                    
+                fetch(`search?type=airports&country=${country.value}&city=${city.value}`, {
+                    method:"GET"
+                })
+                .then(function(response){return response.json()})
+                .then(function(json){
+                    country.value = "";
+                    city.value = "";
+                    let res = document.querySelector('#airportresults');
+                    res.innerHTML = "";
+                    let f = document.createElement("li");
+                    f.style.height = "100px";
+                    f.style.borderBottom = "1px solid";
+                    res.append(f); 
+                    json['airports'].forEach((airport) => {
+                        let f = document.createElement("li");
+                        f.class = "list-group-item";
+                        let map = document.createElement('button');
+                        map.innerHTML="Map";
+                        map.onclick = function(){
+                            window.location.replace(`https://www.google.com/maps/place/${airport['map']}`);
+                        }
+                        let findmore = document.createElement('button');
+                        findmore.innerHTML = "Find More";
+                        findmore.class = "float-right";
+                        findmore.onclick = function(){
+                            window.location.replace(`airport/${airport['id']}`);
+                        }
+                        f.append(`${airport['country']} ${airport['city']} ${airport['name']}`)
+                        f.appendChild(map);
+                        f.appendChild(findmore);
+                        f.style.padding = "10px";
+                        f.style.borderBottom = "1px solid";
+                        res.append(f);
+                    });
+                });
+            };
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div id="home" class="text-center">
+        <img src="https://wallpapers.com/images/hd/sunset-silhouette-airplane-brh2gmlmjhnj74dv.webp" width="65%">
+    </div>
+
+    <div id="flights" class="text-center">
+        <h1>Flight Search</h1>
+        <br>
+        <input id="origin" placeholder="from">
+        <input id="destination" placeholder="to">
+        <button id="findflights">Find</button>
+        <br>
+        <ul id="flightresults" class="list-group">
+        </ul>
+    </div>
+
+    <div id="airports" class="text-center">
+        <h1>Airport Search</h1>
+        <br>
+        <input id="country" placeholder="country">
+        <input id="city" placeholder="city">
+        <button id="findairports">Find</button>
+        <br>
+        <ul id="airportresults" class="list-group">
+        </ul>
+    </div>
+{% endblock %}
