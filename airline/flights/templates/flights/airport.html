@@ -1,0 +1,82 @@
+{% extends 'flights/layout.html'%}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        document.querySelector('#flightsbtn').onclick = ()=>{window.location.replace('/flights/');};
+        document.querySelector('#flightsbtncontent').innerHTML = "Back Home"
+        document.querySelector('#airportsbtn').style.display = "none";
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center" style="position: relative; top: 50px; color:#7dff9e;">
+    {{ name }}
+</h1>
+<div class="position-relative" style="top: 120px; margin: auto; border-radius: 10px; padding-top: 200px; padding-bottom: 200px; width: 75%;">
+    <div class="position-absolute top-0 start-0" style="color:black; border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <h4>Country: {{country}} ({{city}})</h4>
+    </div>
+    <div class="position-absolute top-0 end-0" style="border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <a href={{location}} style="color:black;"><h4>Location</h4></a>
+    </div>
+    <div class="position-absolute bottom-0 start-0" style="color:black; border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <h4>IATA code: {{iata}}</h4>
+    </div>
+    <div class="position-absolute bottom-0 end-0" style="color:black; border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <h4>ICAO code: {{icao}}</h4>
+    </div>
+</div>
+
+<div class="container" style="display: block; margin: auto; position: relative; top: 250px;">
+    <h4 class="text-center">Departures</h4>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Flight Number</th>
+                <th scope="col">Destination</th>
+                <th scope="col">Find more...</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in departures %}
+            <tr>
+                <th scope="row">{{ row.r }}</th>
+                <td>{{ row.num }}</td>
+                <td>{{ row.destination }}</td>
+                <td><a href="/flights/flight/{{row.num}}">flight no. {{row.num}}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br><br><br>
+
+    <h4 class="text-center">Arrivals</h4>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Flight Number</th>
+                <th scope="col">Origin</th>
+                <th scope="col">Find more...</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in arrivals %}
+            <tr>
+                <th scope="row">{{ row.r }}</th>
+                <td>{{ row.num }}</td>
+                <td>{{ row.origin }}</td>
+                <td><a href="/flights/flight/{{row.num}}">flight no. {{row.num}}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br><br><br>
+</div>
+{% endblock%}

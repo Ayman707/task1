@@ -1,0 +1,73 @@
+{% extends 'flights/layout.html'%}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        document.querySelector('#flightsbtn').onclick = ()=>{window.location.replace('/flights/');};
+        document.querySelector('#flightsbtncontent').innerHTML = "Back Home"
+        document.querySelector('#airportsbtn').style.display = "none";
+
+        let p = document.querySelector('#passengers');
+        p.style.display = "none";
+        document.querySelector('#passengersbtn').onclick = ()=>{
+            if(p.style.display === "none"){
+                p.style.display = "block";
+                window.scrollBy(0, 400);
+            }
+            else{
+                p.style.display = "none";
+            }
+        };
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+<h1 class="text-center" style="position: relative; top: 50px; color:#7dff9e;">Flight no. {{id}}</h1>
+<div class="position-relative" style="top: 120px; margin: auto; border-radius: 10px; padding-top: 200px; padding-bottom: 200px; width: 75%;">
+    <div class="position-absolute top-0 start-0"  style="border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <h4 style="color: black;">Origin: {{origin}}</h4>
+    </div>
+    <div class="position-absolute top-0 end-0" style="border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <h4 style="color: black;">Destination: {{destination}}</h4>
+    </div>
+    <div class="position-absolute bottom-0 start-0" style="border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <h4 style="color: black;">Duration: {{duration}} minutes</h4>
+    </div>
+    <button class="position-absolute bottom-0 end-0" id="passengersbtn" style="border-radius: 10px; display: block;background-color: #15a138; width: 40%; text-align: center; padding-top: 50px; padding-bottom: 50px;">       
+        <h4 style="color: black;">Passengers</h4>
+    </button>
+</div>
+
+<div class="container" style="display: block; margin: auto; position: relative; top: 250px;">
+    <form class="text-center" method="post"> {% csrf_token %}
+        <input name="first" placeholder="First Name...">
+        <input name="last" placeholder="Last Name...">
+        <button type="submit" class="btn btn-success">BOOK</button>
+    </form>
+    <br><br><br>
+    <div id="passengers">
+        <h4 class="text-center">Passengers</h4>
+        <br>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for row in passenger %}
+                <tr>
+                    <th scope="row">{{ row.r}}</th>
+                    <td>{{ row.first }}</td>
+                    <td>{{ row.last }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br><br><br>
+    </div>
+</div>
+{% endblock%}

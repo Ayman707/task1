@@ -17,6 +17,9 @@ class passenger(models.Model):
     first = models.CharField(max_length=20)
     last = models.CharField(max_length=20)
 
+    def __str__(self):
+        return f"{self.first} {self.last}"
+
 class flight(models.Model):
     origin = models.ForeignKey(airport, on_delete=models.CASCADE, related_name="departures")
     destination = models.ForeignKey(airport, on_delete=models.CASCADE, related_name="arrivals")
